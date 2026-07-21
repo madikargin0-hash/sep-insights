@@ -1,0 +1,398 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Инсайты SEP</title>
+</head>
+<body>
+<style>
+  :root {
+    --paper: #FBFAF8;
+    --ink: #26211E;
+    --muted: #6E6560;
+    --line: #E8E3DF;
+    --card: #FFFFFF;
+    --accent: #8C1515;
+    --accent-soft: #F3E6E6;
+    --flash: #F9F0E9;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --paper: #1B1715;
+      --ink: #EAE4DF;
+      --muted: #A3978F;
+      --line: #362F2B;
+      --card: #241F1C;
+      --accent: #D45A5A;
+      --accent-soft: #3A2523;
+      --flash: #32281F;
+    }
+  }
+  :root[data-theme="dark"] {
+    --paper: #1B1715; --ink: #EAE4DF; --muted: #A3978F; --line: #362F2B;
+    --card: #241F1C; --accent: #D45A5A; --accent-soft: #3A2523; --flash: #32281F;
+  }
+  :root[data-theme="light"] {
+    --paper: #FBFAF8; --ink: #26211E; --muted: #6E6560; --line: #E8E3DF;
+    --card: #FFFFFF; --accent: #8C1515; --accent-soft: #F3E6E6; --flash: #F9F0E9;
+  }
+  * { box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  @media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
+  body {
+    margin: 0;
+    background: var(--paper);
+    color: var(--ink);
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    line-height: 1.55;
+  }
+  .wrap { max-width: 46rem; margin: 0 auto; padding: 0 1.25rem 5rem; }
+
+  header.masthead { padding: 3.25rem 0 1.5rem; border-bottom: 3px solid var(--accent); }
+  .eyebrow {
+    font-size: .72rem; letter-spacing: .14em; text-transform: uppercase;
+    color: var(--accent); font-weight: 600; margin: 0 0 .6rem;
+  }
+  h1 {
+    font-family: "Iowan Old Style", "Palatino Linotype", Palatino, Georgia, serif;
+    font-size: clamp(2.1rem, 6vw, 3rem); line-height: 1.08; margin: 0;
+    text-wrap: balance; font-weight: 600;
+  }
+  .standfirst { color: var(--muted); margin: .8rem 0 0; max-width: 34rem; }
+  .standfirst b { color: var(--ink); font-variant-numeric: tabular-nums; }
+
+  .controls {
+    position: sticky; top: 0; z-index: 5;
+    background: var(--paper);
+    padding: .9rem 0 .75rem;
+    border-bottom: 1px solid var(--line);
+  }
+  .searchrow { display: flex; gap: .6rem; }
+  .search {
+    flex: 1; display: flex; align-items: center; gap: .5rem;
+    background: var(--card); border: 1px solid var(--line); border-radius: .4rem;
+    padding: .5rem .8rem;
+  }
+  .search svg { flex: none; color: var(--muted); }
+  .search input {
+    border: 0; outline: 0; background: transparent; color: var(--ink);
+    font: inherit; width: 100%;
+  }
+  .search:focus-within { border-color: var(--accent); }
+  button.random {
+    flex: none; border: 1px solid var(--line); background: var(--card); color: var(--ink);
+    font: inherit; font-size: .88rem; border-radius: .4rem; padding: .5rem .9rem; cursor: pointer;
+  }
+  button.random:hover { border-color: var(--accent); color: var(--accent); }
+  button.random:focus-visible, .chip:focus-visible, .search input:focus-visible, .src:focus-visible {
+    outline: 2px solid var(--accent); outline-offset: 2px;
+  }
+  .chips { display: flex; flex-wrap: wrap; gap: .4rem; margin-top: .7rem; }
+  .chip {
+    border: 1px solid var(--line); background: var(--card); color: var(--muted);
+    font: inherit; font-size: .8rem; padding: .28rem .7rem; border-radius: 999px; cursor: pointer;
+  }
+  .chip .n { font-variant-numeric: tabular-nums; opacity: .65; margin-left: .3rem; }
+  .chip[aria-pressed="true"] {
+    background: var(--accent); border-color: var(--accent); color: #fff;
+  }
+  .chip[aria-pressed="true"] .n { opacity: .8; }
+  .chip:hover:not([aria-pressed="true"]) { border-color: var(--accent); color: var(--accent); }
+
+  .themehead {
+    font-family: "Iowan Old Style", "Palatino Linotype", Palatino, Georgia, serif;
+    font-size: 1.35rem; font-weight: 600; margin: 2.6rem 0 .2rem;
+    display: flex; align-items: baseline; gap: .6rem; text-wrap: balance;
+  }
+  .themehead .cnt { font-family: inherit; font-size: .95rem; color: var(--muted); font-variant-numeric: tabular-nums; }
+
+  .card {
+    background: var(--card); border: 1px solid var(--line); border-radius: .45rem;
+    padding: 1rem 1.15rem .85rem; margin-top: .8rem;
+    transition: background-color .5s, border-color .3s;
+  }
+  .card p {
+    margin: 0;
+    font-family: "Iowan Old Style", "Palatino Linotype", Palatino, Georgia, serif;
+    font-size: 1.08rem; line-height: 1.6;
+  }
+  .card q { color: var(--accent); font-style: italic; quotes: "«" "»"; }
+  .meta { display: flex; justify-content: flex-end; margin-top: .55rem; }
+  .src {
+    font-size: .78rem; color: var(--muted); text-decoration: none;
+    background: var(--accent-soft); color: var(--accent);
+    padding: .18rem .6rem; border-radius: 999px;
+  }
+  .src:hover { text-decoration: underline; }
+  .card.flash { background: var(--flash); border-color: var(--accent); }
+  .empty { color: var(--muted); text-align: center; padding: 3rem 0; }
+  .empty b { color: var(--ink); }
+  #toast {
+    position: fixed; left: 50%; bottom: 1.4rem; transform: translateX(-50%) translateY(120%);
+    background: var(--ink); color: var(--paper); font-size: .85rem;
+    padding: .55rem 1rem; border-radius: .45rem; max-width: 90vw;
+    transition: transform .25s; z-index: 20; text-align: center;
+  }
+  #toast.show { transform: translateX(-50%) translateY(0); }
+  @media (prefers-reduced-motion: reduce) { #toast { transition: none; } }
+  footer { margin-top: 3.5rem; padding-top: 1rem; border-top: 1px solid var(--line);
+    color: var(--muted); font-size: .8rem; }
+</style>
+
+<div class="wrap">
+  <header class="masthead">
+    <p class="eyebrow">Stanford Executive Program · 2025–26</p>
+    <h1>Инсайты SEP</h1>
+    <p class="standfirst"><b id="total">0</b> уроков, отмеченных <span style="color:var(--accent)">#insight</span> в конспектах лекций. Ссылка на карточке открывает заметку-источник в Obsidian.</p>
+  </header>
+
+  <div class="controls">
+    <div class="searchrow">
+      <label class="search">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" aria-hidden="true"><circle cx="11" cy="11" r="7"></circle><line x1="16.5" y1="16.5" x2="21" y2="21"></line></svg>
+        <input id="q" type="search" placeholder="Поиск по инсайтам…" aria-label="Поиск по инсайтам">
+      </label>
+      <button class="random" id="rnd" title="Показать случайный инсайт">Случайный</button>
+    </div>
+    <div class="chips" id="chips" role="group" aria-label="Фильтр по темам"></div>
+  </div>
+
+  <main id="list" aria-live="polite"></main>
+
+  <footer>Свод собран из 31 заметки базы знаний · вариант для чтения: заметка «Инсайты SEP» в Obsidian</footer>
+</div>
+<div id="toast" role="status" aria-live="polite"></div>
+
+<script>
+const THEMES = [
+  ["strategy", "Стратегия и преимущество"],
+  ["innovation", "Инновации и продукт"],
+  ["platforms", "Платформы и маркетплейсы"],
+  ["negotiation", "Переговоры и игры"],
+  ["finance", "Финансы и учёт"],
+  ["leadership", "Лидерство и ценности"],
+  ["communication", "Коммуникация"],
+  ["ai", "AI и технологии"],
+  ["marketing", "Маркетинг"],
+  ["todo", "Недописанные"],
+];
+
+// t: текст (допустим <q>цитата</q>), s: заметка-источник
+const DATA = [
+  {th:"strategy", s:"Strategy", t:"<q>That is the power</q> — власть равна зависимости. Jerry Fiddler (Wind River) отказался продаться GE, дал больше use-cases и построил глубину — и GE, Sun и Motorola сами перешли на его платформу."},
+  {th:"strategy", s:"Power in exchange relationships is an inverse function of dependence II", t:"<q>Your profit is my opportunity</q> — чужая маржа — твоя возможность."},
+  {th:"strategy", s:"Sources of Superior Performance I", t:"Продаёшь не организации, а конкретным людям, которые говорят от её имени."},
+  {th:"strategy", s:"Sources of Superior Performance I", t:"Думай о клиенте клиента: что волнует покупателя твоего покупателя?"},
+  {th:"strategy", s:"Strategy", t:"<q>You just need to be better</q>. Искать «голубой океан» красиво в теории — реальный мир так не работает."},
+  {th:"strategy", s:"Sources of Advantage II", t:"Disney: «мы не боимся второго Disney — мы конкурируем с Fortnite». Конкуренция идёт за внимание, а не внутри отрасли."},
+  {th:"strategy", s:"Strategy", t:"Learn &amp; adapt: учиться и адаптироваться, чтобы «строить глубину» и улучшать product-market fit."},
+  {th:"strategy", s:"Strategy", t:"Дисраптивная стратегия — это логика, убивающая логику прежней бизнес-модели; новая логика даже не похожа на старую."},
+  {th:"strategy", s:"Strategic Leadership", t:"<q>A plan is not a strategy</q> (Roger Martin). Хорошая стратегия отвечает на три вопроса."},
+  {th:"strategy", s:"Strategic Leadership", t:"Нельзя быть уверенным в стратегии без явной теории того, почему организация выигрывает или проигрывает, — это и есть «logic»."},
+  {th:"strategy", s:"Strategic Leadership", t:"Лишь 35% руководителей верят, что стратегия их компании приведёт к успеху."},
+  {th:"strategy", s:"Strategic Leadership", t:"Масштабные изменения происходят только через организацию."},
+  {th:"strategy", s:"Organizational Growth by Design", t:"Рост — одна из главных причин гибели компаний."},
+  {th:"strategy", s:"Organizational Growth by Design", t:"Нужен whole product — целостный продукт, а не «ядро» без обвязки."},
+
+  {th:"negotiation", s:"Power in exchange relationships is an inverse function of dependence II", t:"Решения типа A (необратимые) и типа B (обратимые) — различай их до того, как решать."},
+  {th:"negotiation", s:"Games People Play", t:"<q>Your pain is my gain</q> возможно лишь по двум причинам: либо злорадство (успех «относительно других»), либо часть большей игры — проиграю сегодня, выиграю завтра."},
+  {th:"negotiation", s:"Mobileye - Bargaining", t:"Стартапы систематически занижают свою цену."},
+  {th:"negotiation", s:"The choice of negotiation", t:"Ставь высокую aspiration: всего не получишь, но и результат, и удовлетворённость будут выше."},
+  {th:"negotiation", s:"The choice of negotiation", t:"Переговорная культура исторически «мужская» — учитывай это в динамике за столом."},
+  {th:"negotiation", s:"Getting (more of) what you want", t:"Эксперимент с копиром: просьба с обоснованием («because…») резко повышает согласие — даже если причина тривиальна."},
+  {th:"negotiation", s:"Getting (more of) what you want", t:"Незнакомцы в Нью-Йорке дают телефон в 6 случаях из 10 — мы сильно недооцениваем готовность людей помогать."},
+
+  {th:"innovation", s:"Think insinde the Box", t:"Новички ищут решения. Правильно — сначала стать кристально ясным в проблеме."},
+  {th:"innovation", s:"Think insinde the Box", t:"Шаблон subtraction: убери из продукта существенный компонент — и посмотри, что откроется."},
+  {th:"innovation", s:"Think insinde the Box", t:"Мы present-biased: продукт «для будущего», который не виден и не нужен прямо сейчас, покупатель считает бесполезным."},
+  {th:"innovation", s:"Think insinde the Box", t:"Продавай смысл, а не материал: производитель коробок из переработанного пластика продаёт <q>We mold what is important to you</q>."},
+  {th:"innovation", s:"Disrupting a Market with New Technology", t:"Сегментируй не по демографии, а по роли (геймеры, домовладельцы) и психографике."},
+  {th:"innovation", s:"Disrupting a Market with New Technology", t:"Реши заранее: ты контролируешь низкую цену или высокую? Слишком низкая цена вызывает подозрение, даже если качество выше."},
+  {th:"innovation", s:"Disrupting a Market with New Technology", t:"Цикл «пропасти» ~12 лет; полагаться только на ранних последователей — застрять в цикле chasm."},
+  {th:"innovation", s:"Disrupting a Market with New Technology", t:"Новые технологии стартуют с пика ожиданий, потом падают."},
+  {th:"innovation", s:"Disrupting a Market with New Technology", t:"Новая категория невидима в поиске (умные разбрызгиватели — не top-of-mind), поэтому своё приложение, релевантное продукту и value proposition, — big thing."},
+  {th:"innovation", s:"The Innovation Process 1 Product Market Fiе", t:"«Как создать новую ценность для существующего клиента?» — создавай взаимодействие («чтобы собака захотела корм»)."},
+  {th:"innovation", s:"Creativity in the Business Ecosystem", t:"Oatly начали с бариста (овсяное молоко лучше пенится) — точный выбор клина для входа на рынок."},
+  {th:"innovation", s:"Creativity in the Business Ecosystem", t:"Samsung создал рутину и пространство, где «искрит» творчество, → 60 патентов за год. Творчество — процесс, а не вдохновение."},
+  {th:"innovation", s:"Creativity in the Business Ecosystem", t:"P-creativity vs H-creativity: «новое для тебя» часто уже известно многим — проверяй."},
+  {th:"innovation", s:"Creativity in the Business Ecosystem", t:"Новый проект начинай с максимальной цены, но артикулируй, почему дорого («металл как для космических кораблей»)."},
+  {th:"innovation", s:"Creativity in the Business Ecosystem", t:"Приём «пресс-конференция заранее»: сформулируй, что объявишь по итогам, — сразу поймёшь, стоит ли это делать."},
+  {th:"innovation", s:"Creativity in the Business Ecosystem", t:"Смена парадигмы рынка: «они превратили рынок железа в рынок софта»."},
+  {th:"innovation", s:"Developing a Business Model I", t:"Избегай продуктов, требующих behaviour modification, — менять привычки людей труднее всего."},
+  {th:"innovation", s:"Developing a Business Model I", t:"Клиентов приводят удобство, характер опыта и цена — причём цена фактор №1."},
+
+  {th:"platforms", s:"The Grand Bazaar on Clouds.", t:"Маркетплейс с долей рынка меньше 20% не выживает."},
+  {th:"platforms", s:"The Grand Bazaar on Clouds.", t:"Чем больше продавцов в петле, тем сильнее конкуренция — и тем несчастнее продавцы."},
+  {th:"platforms", s:"The Grand Bazaar on Clouds.", t:"Ниша против гиганта: YouTube не победить, но можно сделать видеохостинг для геймеров и музыкантов — так появился Twitch."},
+  {th:"platforms", s:"The Grand Bazaar on Clouds.", t:"Airbnb: дискриминация по именам и трение при бронировании (отель был проще) → ответ: instant booking."},
+  {th:"platforms", s:"The Grand Bazaar on Clouds.", t:"Amazon зарабатывает на sponsored ads больше, чем кажется со стороны, — реклама как главный источник маржи маркетплейса."},
+  {th:"platforms", s:"The Grand Bazaar on Clouds.", t:"Аукцион второй цены (Vickrey): победитель платит цену второго — механика, создающая ценность платформе."},
+
+  {th:"finance", s:"Accounting for valuation and control", t:"Cash flow не рассказывает всю историю."},
+  {th:"finance", s:"Accounting for valuation and control", t:"Менеджеры, понимающие маркетинг, растят выручку; понимающие учёт — прибыль."},
+  {th:"finance", s:"Accounting for valuation and control", t:"Округа с бóльшим числом бухгалтеров растут быстрее — даже после контроля обратной причинности."},
+  {th:"finance", s:"Financial innovation", t:"Всегда смотри и NPV, и IRR."},
+  {th:"finance", s:"Financing Innovation - Strategic value creation", t:"Чаще всего ты заранее не знаешь, откуда именно вернутся деньги."},
+  {th:"finance", s:"Corporate Venture Capital", t:"Корпоративные венчурные фонды: 97% умирают в течение 3 лет."},
+  {th:"finance", s:"Private Equity and Shareholder Maximization", t:"Консультанты «всегда» приносят премию ~30% за поглощение — относись к числу скептически."},
+
+  {th:"leadership", s:"Living up to Your Values", t:"Кажется, что у всех всё легко, — на деле все «гребут изо всех сил» под водой."},
+  {th:"leadership", s:"Living up to Your Values", t:"Молчание ≠ согласие: после встречи люди остаются при своих мнениях."},
+  {th:"leadership", s:"Living up to Your Values", t:"Сила контекста (Милгрэм): обычный человек «бьёт током» за неверный ответ; группа и контекст заставляют рисковать жизнью."},
+  {th:"leadership", s:"Living up to Your Values", t:"Кейс GM: уволили всех и наняли заново (прошли 80%) — жёсткий перезапуск культуры сработал."},
+  {th:"leadership", s:"Living up to Your Values", t:"Назначай людям роли — качество решений вырастет."},
+  {th:"leadership", s:"Leading by Design", t:"У каждого должен быть план развития: менеджер обязан понимать твой путь на 3–5 лет; внезапный уход сотрудника — минус менеджеру."},
+  {th:"leadership", s:"Leading by Design", t:"Мы ценим «сейчас» больше, чем тот же момент в будущем, — поэтому и игнорируем устойчивость."},
+  {th:"leadership", s:"Leading Team. Team Work", t:"Часть обучения — автоматизация навыка."},
+  {th:"leadership", s:"Strategy", t:"Люди эмоциональны: страх выглядеть дураком сильнее надежды оказаться гением."},
+  {th:"leadership", s:"Strategy", t:"Босс-«консенсусник» = нет новых идей. Отбрасывая неконсенсусные идеи, выбрасываем и гениальные. Позволяй людям быть «глупыми» — вариация и отбор, как в эволюции."},
+  {th:"leadership", s:"Strategy", t:"«Америка меня не свергнет, а Facebook может» (приписывается Асаду) — сила сетей против иерархий."},
+  {th:"leadership", s:"Decision making", t:"«Чудо на Гудзоне» (Салленбергер) — эталонный кейс принятия решений под давлением."},
+
+  {th:"communication", s:"Communication", t:"До выступления оцени уровень знаний аудитории по теме (high/low)."},
+  {th:"communication", s:"Communication", t:"Покажи, что думал об аудитории, — это создаёт credibility."},
+  {th:"communication", s:"Communication", t:"Формула цели Do-Feel-Do: что сделать → что почувствовать → что сделать."},
+  {th:"communication", s:"Communication", t:"Связки «next, second, third» — слабые переходы: на них теряют людей. Нужны сильные мосты «откуда → куда»."},
+  {th:"communication", s:"Communication", t:"Структура — GPS аудитории: без неё люди уходят в телефоны или спят."},
+  {th:"communication", s:"Communication", t:"Не «глуши» цифрами: числу нужен контекст ($X впечатляет меньше, чем «25% всех денег мира»)."},
+  {th:"communication", s:"Communication", t:"Support (примеры, цифры) — способ занести нужную эмоцию в сообщение."},
+  {th:"communication", s:"Communication", t:"MVC — Minimally Viable Communication: минимально достаточная коммуникация."},
+
+  {th:"ai", s:"AI turbo session + Working in teams", t:"Скорость адопции беспрецедентна: ChatGPT достиг 30% проникновения за 60 дней (электричеству и телефону нужны были десятилетия)."},
+  {th:"ai", s:"AI turbo session + Working in teams", t:"Не «больше данных», а «лучше данных»: публичные данные исчерпаны, следующая ценность — за корпоративными файрволами (медицинская модель: 92,6% точности на 1 800 тюнинг-элементах и 40 экспертных примерах)."},
+  {th:"ai", s:"AI turbo session + Working in teams", t:"Transformer родился из ошибки (инженер перепутал «Kanada» и «Kannada») — прорывы дают ошибки и комбинаторика, а не линейный прогресс."},
+  {th:"ai", s:"AI turbo session + Working in teams", t:"LLM — математика предсказания связей; сильны там, где размерность системы выше человеческой (материаловедение)."},
+  {th:"ai", s:"AI turbo session + Working in teams", t:"Поведение модели можно тихо изменить одной неочевидной фичей — новый класс рисков безопасности и влияния."},
+  {th:"ai", s:"AI turbo session + Working in teams", t:"Post-trust world: <q>Assume everything you see is wrong</q>, пока доверие не установлено."},
+  {th:"ai", s:"The Economic, Political, and Social Implications of Transformative AI", t:"<q>Attention is all you need</q>."},
+  {th:"ai", s:"Handling Hot-Button Issues", t:"Технологии внедряются быстрее, чем успевает регулирование, — универсального решения нет."},
+
+  {th:"marketing", s:"Marketing sessions", t:"<q>Last one in is the first one out</q> — последний пришедший на рынок уходит первым."},
+
+  {th:"todo", s:"The choice of negotiation", t:"«28:30 — надо послушать» — пометка на аудио/видео фрагменте."},
+  {th:"todo", s:"Getting (more of) what you want", t:"«Главный предиктор успешного брака…» — фраза не окончена."},
+  {th:"todo", s:"Corporate Venture Capital", t:"«There was a correlation» — без продолжения."},
+  {th:"todo", s:"Disrupting a Market with New Technology", t:"#insight у фото 20251107_104419 без подписи."},
+  {th:"todo", s:"The Rise of Activism", t:"#insight у фото IMG-20251101-WA0205 без подписи."},
+];
+
+const themeName = Object.fromEntries(THEMES);
+let activeTheme = null;
+let query = "";
+
+const $list = document.getElementById("list");
+const $chips = document.getElementById("chips");
+document.getElementById("total").textContent = DATA.length;
+
+// В песочнице claude.ai переходы на obsidian:// заблокированы CSP —
+// там клик копирует название заметки; из локального файла ссылка работает напрямую.
+const CAN_DEEPLINK = location.protocol === "file:";
+
+function obsidianUrl(note) {
+  return "obsidian://open?vault=nn&file=" + encodeURIComponent(note);
+}
+
+let toastTimer = null;
+function copyName(name) {
+  const done = () => {
+    const t = document.getElementById("toast");
+    t.textContent = "«" + name + "» скопировано — в Obsidian нажмите ⌘O и вставьте";
+    t.classList.add("show");
+    clearTimeout(toastTimer);
+    toastTimer = setTimeout(() => t.classList.remove("show"), 2600);
+  };
+  if (navigator.clipboard && navigator.clipboard.writeText) {
+    navigator.clipboard.writeText(name).then(done, done);
+  } else {
+    done();
+  }
+}
+
+function matches(item) {
+  if (activeTheme && item.th !== activeTheme) return false;
+  if (!query) return true;
+  const hay = (item.t + " " + item.s + " " + themeName[item.th]).toLowerCase();
+  return query.split(/\s+/).every(w => hay.includes(w));
+}
+
+function render() {
+  const found = DATA.filter(matches);
+  $list.innerHTML = "";
+  if (!found.length) {
+    $list.innerHTML = '<p class="empty">Ничего не нашлось по запросу <b></b> — попробуйте короче.</p>';
+    $list.querySelector("b").textContent = "«" + query + "»";
+    return;
+  }
+  for (const [key, name] of THEMES) {
+    const group = found.filter(i => i.th === key);
+    if (!group.length) continue;
+    const h = document.createElement("h2");
+    h.className = "themehead";
+    h.innerHTML = name + ' <span class="cnt"></span>';
+    h.querySelector(".cnt").textContent = group.length;
+    $list.appendChild(h);
+    for (const item of group) {
+      const c = document.createElement("article");
+      c.className = "card";
+      c.dataset.idx = DATA.indexOf(item);
+      const p = document.createElement("p");
+      p.innerHTML = item.t;
+      const meta = document.createElement("div");
+      meta.className = "meta";
+      const a = document.createElement("a");
+      a.className = "src";
+      a.href = obsidianUrl(item.s);
+      a.textContent = "→ " + item.s;
+      a.title = CAN_DEEPLINK ? "Открыть заметку в Obsidian" : "Скопировать название заметки";
+      if (!CAN_DEEPLINK) {
+        a.addEventListener("click", ev => {
+          ev.preventDefault();
+          copyName(item.s);
+        });
+      }
+      meta.appendChild(a);
+      c.appendChild(p); c.appendChild(meta);
+      $list.appendChild(c);
+    }
+  }
+}
+
+for (const [key, name] of THEMES) {
+  const n = DATA.filter(i => i.th === key).length;
+  const b = document.createElement("button");
+  b.className = "chip";
+  b.setAttribute("aria-pressed", "false");
+  b.innerHTML = name + '<span class="n"></span>';
+  b.querySelector(".n").textContent = n;
+  b.addEventListener("click", () => {
+    activeTheme = activeTheme === key ? null : key;
+    for (const c of $chips.children) c.setAttribute("aria-pressed", "false");
+    if (activeTheme) b.setAttribute("aria-pressed", "true");
+    render();
+  });
+  $chips.appendChild(b);
+}
+
+document.getElementById("q").addEventListener("input", e => {
+  query = e.target.value.trim().toLowerCase();
+  render();
+});
+
+document.getElementById("rnd").addEventListener("click", () => {
+  const pool = DATA.filter(matches);
+  if (!pool.length) return;
+  const pick = pool[Math.floor(Math.random() * pool.length)];
+  render();
+  const el = $list.querySelector('.card[data-idx="' + DATA.indexOf(pick) + '"]');
+  if (!el) return;
+  el.scrollIntoView({ block: "center" });
+  el.classList.add("flash");
+  setTimeout(() => el.classList.remove("flash"), 1600);
+});
+
+render();
+</script>
+
+</body>
+</html>
