@@ -118,7 +118,14 @@
     font-size: 1.08rem; line-height: 1.6;
   }
   .card q { color: var(--accent); font-style: italic; quotes: "«" "»"; }
-  .meta { display: flex; justify-content: flex-end; margin-top: .55rem; }
+  .meta { display: flex; justify-content: space-between; align-items: center; gap: .5rem; margin-top: .55rem; }
+  .impl {
+    font-size: .68rem; letter-spacing: .08em; text-transform: uppercase; font-weight: 600;
+    color: var(--accent); border: 1px solid var(--accent); border-radius: 999px;
+    padding: .1rem .5rem; white-space: nowrap;
+  }
+  .chip.implchip { border-style: dashed; border-color: var(--accent); color: var(--accent); }
+  .chip.implchip[aria-pressed="true"] { border-style: solid; }
   .src {
     font-size: .78rem; color: var(--muted); text-decoration: none;
     background: var(--accent-soft); color: var(--accent);
@@ -175,6 +182,7 @@ const THEMES = [
   ["communication", "Коммуникация"],
   ["ai", "AI и технологии"],
   ["marketing", "Маркетинг"],
+  ["edu", "EduInsights"],
   ["todo", "Недописанные"],
 ];
 
@@ -189,8 +197,8 @@ const DATA = [
   {th:"strategy", s:"Strategy", t:"Learn &amp; adapt: учиться и адаптироваться, чтобы «строить глубину» и улучшать product-market fit."},
   {th:"strategy", s:"Strategy", t:"Дисраптивная стратегия — это логика, убивающая логику прежней бизнес-модели; новая логика даже не похожа на старую."},
   {th:"strategy", s:"Strategic Leadership", t:"<q>A plan is not a strategy</q> (Roger Martin). Хорошая стратегия отвечает на три вопроса."},
-  {th:"strategy", s:"Strategic Leadership", t:"Нельзя быть уверенным в стратегии без явной теории того, почему организация выигрывает или проигрывает, — это и есть «logic»."},
-  {th:"strategy", s:"Strategic Leadership", t:"Лишь 35% руководителей верят, что стратегия их компании приведёт к успеху."},
+  {impl:true, th:"strategy", s:"Strategic Leadership", t:"Нельзя быть уверенным в стратегии без явной теории того, почему организация выигрывает или проигрывает, — это и есть «logic»."},
+  {impl:true, th:"strategy", s:"Strategic Leadership", t:"Лишь 35% руководителей верят, что стратегия их компании приведёт к успеху."},
   {th:"strategy", s:"Strategic Leadership", t:"Масштабные изменения происходят только через организацию."},
   {th:"strategy", s:"Organizational Growth by Design", t:"Рост — одна из главных причин гибели компаний."},
   {th:"strategy", s:"Organizational Growth by Design", t:"Нужен whole product — целостный продукт, а не «ядро» без обвязки."},
@@ -209,25 +217,27 @@ const DATA = [
   {th:"innovation", s:"Think insinde the Box", t:"Продавай смысл, а не материал: производитель коробок из переработанного пластика продаёт <q>We mold what is important to you</q>."},
   {th:"innovation", s:"Disrupting a Market with New Technology", t:"Сегментируй не по демографии, а по роли (геймеры, домовладельцы) и психографике."},
   {th:"innovation", s:"Disrupting a Market with New Technology", t:"Реши заранее: ты контролируешь низкую цену или высокую? Слишком низкая цена вызывает подозрение, даже если качество выше."},
-  {th:"innovation", s:"Disrupting a Market with New Technology", t:"Цикл «пропасти» ~12 лет; полагаться только на ранних последователей — застрять в цикле chasm."},
+  {impl:true, th:"innovation", s:"Disrupting a Market with New Technology", t:"Цикл «пропасти» ~12 лет; полагаться только на ранних последователей — застрять в цикле chasm."},
   {th:"innovation", s:"Disrupting a Market with New Technology", t:"Новые технологии стартуют с пика ожиданий, потом падают."},
   {th:"innovation", s:"Disrupting a Market with New Technology", t:"Новая категория невидима в поиске (умные разбрызгиватели — не top-of-mind), поэтому своё приложение, релевантное продукту и value proposition, — big thing."},
   {th:"innovation", s:"The Innovation Process 1 Product Market Fiе", t:"«Как создать новую ценность для существующего клиента?» — создавай взаимодействие («чтобы собака захотела корм»)."},
-  {th:"innovation", s:"Creativity in the Business Ecosystem", t:"Oatly начали с бариста (овсяное молоко лучше пенится) — точный выбор клина для входа на рынок."},
+  {impl:true, th:"innovation", s:"Creativity in the Business Ecosystem", t:"Oatly начали с бариста (овсяное молоко лучше пенится) — точный выбор клина для входа на рынок."},
   {th:"innovation", s:"Creativity in the Business Ecosystem", t:"Samsung создал рутину и пространство, где «искрит» творчество, → 60 патентов за год. Творчество — процесс, а не вдохновение."},
-  {th:"innovation", s:"Creativity in the Business Ecosystem", t:"P-creativity vs H-creativity: «новое для тебя» часто уже известно многим — проверяй."},
+  {impl:true, th:"innovation", s:"Creativity in the Business Ecosystem", t:"P-creativity vs H-creativity: «новое для тебя» часто уже известно многим — проверяй."},
   {th:"innovation", s:"Creativity in the Business Ecosystem", t:"Новый проект начинай с максимальной цены, но артикулируй, почему дорого («металл как для космических кораблей»)."},
   {th:"innovation", s:"Creativity in the Business Ecosystem", t:"Приём «пресс-конференция заранее»: сформулируй, что объявишь по итогам, — сразу поймёшь, стоит ли это делать."},
   {th:"innovation", s:"Creativity in the Business Ecosystem", t:"Смена парадигмы рынка: «они превратили рынок железа в рынок софта»."},
   {th:"innovation", s:"Developing a Business Model I", t:"Избегай продуктов, требующих behaviour modification, — менять привычки людей труднее всего."},
   {th:"innovation", s:"Developing a Business Model I", t:"Клиентов приводят удобство, характер опыта и цена — причём цена фактор №1."},
 
+  {impl:true, th:"innovation", s:"Disrupting a Market with New Technology", t:"Value–customer fit: проверяй соответствие ценности конкретному сегменту клиентов, а не «рынку вообще»."},
+  {impl:true, th:"platforms", s:"The Grand Bazaar on Clouds.", t:"<q>Google made money from the air</q> — поисковая реклама монетизирует само намерение, «воздух»: актив, которого раньше не существовало."},
   {th:"platforms", s:"The Grand Bazaar on Clouds.", t:"Маркетплейс с долей рынка меньше 20% не выживает."},
   {th:"platforms", s:"The Grand Bazaar on Clouds.", t:"Чем больше продавцов в петле, тем сильнее конкуренция — и тем несчастнее продавцы."},
   {th:"platforms", s:"The Grand Bazaar on Clouds.", t:"Ниша против гиганта: YouTube не победить, но можно сделать видеохостинг для геймеров и музыкантов — так появился Twitch."},
   {th:"platforms", s:"The Grand Bazaar on Clouds.", t:"Airbnb: дискриминация по именам и трение при бронировании (отель был проще) → ответ: instant booking."},
   {th:"platforms", s:"The Grand Bazaar on Clouds.", t:"Amazon зарабатывает на sponsored ads больше, чем кажется со стороны, — реклама как главный источник маржи маркетплейса."},
-  {th:"platforms", s:"The Grand Bazaar on Clouds.", t:"Аукцион второй цены (Vickrey): победитель платит цену второго — механика, создающая ценность платформе."},
+  {impl:true, th:"platforms", s:"The Grand Bazaar on Clouds.", t:"Аукцион второй цены (Vickrey): победитель платит цену второго — механика, создающая ценность платформе."},
 
   {th:"finance", s:"Accounting for valuation and control", t:"Cash flow не рассказывает всю историю."},
   {th:"finance", s:"Accounting for valuation and control", t:"Менеджеры, понимающие маркетинг, растят выручку; понимающие учёт — прибыль."},
@@ -237,12 +247,12 @@ const DATA = [
   {th:"finance", s:"Corporate Venture Capital", t:"Корпоративные венчурные фонды: 97% умирают в течение 3 лет."},
   {th:"finance", s:"Private Equity and Shareholder Maximization", t:"Консультанты «всегда» приносят премию ~30% за поглощение — относись к числу скептически."},
 
-  {th:"leadership", s:"Living up to Your Values", t:"Кажется, что у всех всё легко, — на деле все «гребут изо всех сил» под водой."},
-  {th:"leadership", s:"Living up to Your Values", t:"Молчание ≠ согласие: после встречи люди остаются при своих мнениях."},
-  {th:"leadership", s:"Living up to Your Values", t:"Сила контекста (Милгрэм): обычный человек «бьёт током» за неверный ответ; группа и контекст заставляют рисковать жизнью."},
-  {th:"leadership", s:"Living up to Your Values", t:"Кейс GM: уволили всех и наняли заново (прошли 80%) — жёсткий перезапуск культуры сработал."},
-  {th:"leadership", s:"Living up to Your Values", t:"Назначай людям роли — качество решений вырастет."},
-  {th:"leadership", s:"Leading by Design", t:"У каждого должен быть план развития: менеджер обязан понимать твой путь на 3–5 лет; внезапный уход сотрудника — минус менеджеру."},
+  {impl:true, th:"leadership", s:"Living up to Your Values", t:"Кажется, что у всех всё легко, — на деле все «гребут изо всех сил» под водой."},
+  {impl:true, th:"leadership", s:"Living up to Your Values", t:"Молчание ≠ согласие: после встречи люди остаются при своих мнениях."},
+  {impl:true, th:"leadership", s:"Living up to Your Values", t:"Сила контекста (Милгрэм): обычный человек «бьёт током» за неверный ответ; группа и контекст заставляют рисковать жизнью."},
+  {impl:true, th:"leadership", s:"Living up to Your Values", t:"Кейс GM: уволили всех и наняли заново (прошли 80%) — жёсткий перезапуск культуры сработал."},
+  {impl:true, th:"leadership", s:"Living up to Your Values", t:"Назначай людям роли — качество решений вырастет."},
+  {impl:true, th:"leadership", s:"Leading by Design", t:"У каждого должен быть план развития: менеджер обязан понимать твой путь на 3–5 лет; внезапный уход сотрудника — минус менеджеру."},
   {th:"leadership", s:"Leading by Design", t:"Мы ценим «сейчас» больше, чем тот же момент в будущем, — поэтому и игнорируем устойчивость."},
   {th:"leadership", s:"Leading Team. Team Work", t:"Часть обучения — автоматизация навыка."},
   {th:"leadership", s:"Strategy", t:"Люди эмоциональны: страх выглядеть дураком сильнее надежды оказаться гением."},
@@ -270,8 +280,8 @@ const DATA = [
 
   {th:"marketing", s:"Marketing sessions", t:"<q>Last one in is the first one out</q> — последний пришедший на рынок уходит первым."},
 
-  {th:"todo", s:"The choice of negotiation", t:"«28:30 — надо послушать» — пометка на аудио/видео фрагменте."},
-  {th:"todo", s:"Getting (more of) what you want", t:"«Главный предиктор успешного брака…» — фраза не окончена."},
+  {impl:true, th:"todo", s:"The choice of negotiation", t:"«28:30 — надо послушать» — пометка на аудио/видео фрагменте."},
+  {impl:true, th:"todo", s:"Getting (more of) what you want", t:"«Главный предиктор успешного брака…» — фраза не окончена."},
   {th:"todo", s:"Corporate Venture Capital", t:"«There was a correlation» — без продолжения."},
   {th:"todo", s:"Disrupting a Market with New Technology", t:"#insight у фото 20251107_104419 без подписи."},
   {th:"todo", s:"The Rise of Activism", t:"#insight у фото IMG-20251101-WA0205 без подписи."},
@@ -280,6 +290,7 @@ const DATA = [
 const themeName = Object.fromEntries(THEMES);
 let activeTheme = null;
 let query = "";
+let implOnly = false;
 
 const $list = document.getElementById("list");
 const $chips = document.getElementById("chips");
@@ -310,6 +321,7 @@ function copyName(name) {
 }
 
 function matches(item) {
+  if (implOnly && !item.impl) return false;
   if (activeTheme && item.th !== activeTheme) return false;
   if (!query) return true;
   const hay = (item.t + " " + item.s + " " + themeName[item.th]).toLowerCase();
@@ -340,6 +352,15 @@ function render() {
       p.innerHTML = item.t;
       const meta = document.createElement("div");
       meta.className = "meta";
+      if (item.impl) {
+        const b = document.createElement("span");
+        b.className = "impl";
+        b.textContent = "внедрить";
+        b.title = "Помечено тегом #Implementation — правило действия";
+        meta.appendChild(b);
+      } else {
+        meta.appendChild(document.createElement("span"));
+      }
       const a = document.createElement("a");
       a.className = "src";
       a.href = obsidianUrl(item.s);
@@ -374,6 +395,19 @@ for (const [key, name] of THEMES) {
   $chips.appendChild(b);
 }
 
+const implChip = document.createElement("button");
+implChip.className = "chip implchip";
+implChip.setAttribute("aria-pressed", "false");
+implChip.innerHTML = '✓ Внедрить<span class="n"></span>';
+implChip.querySelector(".n").textContent = DATA.filter(i => i.impl).length;
+implChip.title = "Только правила действия (#Implementation)";
+implChip.addEventListener("click", () => {
+  implOnly = !implOnly;
+  implChip.setAttribute("aria-pressed", String(implOnly));
+  render();
+});
+$chips.appendChild(implChip);
+
 document.getElementById("q").addEventListener("input", e => {
   query = e.target.value.trim().toLowerCase();
   render();
@@ -393,6 +427,5 @@ document.getElementById("rnd").addEventListener("click", () => {
 
 render();
 </script>
-
 </body>
 </html>
