@@ -107,6 +107,13 @@
 
   /* Горизонты */
   #hCurves { display: block; width: 100%; margin-top: 1rem; }
+  .hlegend { display: flex; gap: .5rem; flex-wrap: wrap; margin-top: .6rem; }
+  .hlegend button { font: inherit; font-size: .8rem; border: 1px solid var(--line); background: var(--card);
+    color: var(--ink); border-radius: 999px; padding: .3rem .8rem; cursor: pointer;
+    display: flex; align-items: center; gap: .45rem; }
+  .hlegend button i { width: .65rem; height: .65rem; border-radius: 50%; }
+  .hlegend button .n { color: var(--muted); font-variant-numeric: tabular-nums; }
+  .hlegend button:hover { border-color: var(--accent); }
   .hintro { color: var(--muted); font-size: .88rem; margin: .8rem 0 0; max-width: 40rem; }
   .hband { margin-top: 1.6rem; border-left: 4px solid var(--line); padding-left: 1rem; }
   .hband.h1 { border-color: var(--h1c); } .hband.h2 { border-color: var(--h2c); } .hband.h3 { border-color: var(--h3c); }
@@ -212,8 +219,9 @@
   </div>
 
   <div class="view" id="v-hor">
-    <canvas id="hCurves" height="110" aria-hidden="true"></canvas>
-    <p class="hintro">Вся база, разложенная по жизненному циклу компании: что нужно <b>с первого дня</b>, что — <b>когда растёшь</b>, и <b>куда смотреть</b>, чтобы найти следующую модель. Пропорции полос — диагностика фокуса базы.</p>
+    <canvas id="hCurves" height="250" aria-label="Диаграмма трёх горизонтов"></canvas>
+    <div class="hlegend" id="hLegend"></div>
+    <p class="hintro">Вся база, разложенная по жизненному циклу компании: что нужно <b>с первого дня</b>, что — <b>когда растёшь</b>, и <b>куда смотреть</b>, чтобы найти следующую модель. Клик по горизонту в легенде ведёт к его разделу.</p>
     <div id="horBody"></div>
   </div>
 
@@ -734,21 +742,92 @@ function buildHor() {
     }
     box.appendChild(band);
   }
+  drawHorChart();
+  addEventListener("resize", () => { if (views.hor) drawHorChart(); });
+  const leg = document.getElementById("hLegend");
+  HMETA.forEach(([h, cls, name]) => {
+    const n = DATA.filter(x => x.h === h).length;
+    const b = document.createElement("button");
+    const col = getComputedStyle(document.documentElement).getPropertyValue("--" + cls + "c").trim();
+    b.innerHTML = "<i style='background:" + col + "'></i>" + name.replace(/ · /g, " — ") + " <span class='n'>" + n + "</span>";
+    b.addEventListener("click", () => document.querySelector(".hband." + cls).scrollIntoView({ block: "start", behavior: "smooth" }));
+    leg.appendChild(b);
+  });
+}
+function drawHorChart() {
   const c = document.getElementById("hCurves");
-  c.width = c.clientWidth * devicePixelRatio; c.height = 110 * devicePixelRatio;
-  const x = c.getContext("2d"); x.setTransform(devicePixelRatio,0,0,devicePixelRatio,0,0);
+  const CH = 250, dpr = devicePixelRatio || 1;
+  c.width = c.clientWidth * dpr; c.height = CH * dpr;
+  const x = c.getContext("2d"); x.setTransform(dpr, 0, 0, dpr, 0, 0);
   const W = c.clientWidth;
   const cs = getComputedStyle(document.documentElement);
-  function curve(color, f) {
-    x.beginPath(); x.strokeStyle = color; x.lineWidth = 2.2;
-    for (let px = 0; px <= W; px += 4) { const y = f(px / W); px === 0 ? x.moveTo(px, y) : x.lineTo(px, y); }
-    x.stroke();
+  const col = { h1: cs.getPropertyValue("--h1c").trim(), h2: cs.getPropertyValue("--h2c").trim(),
+                h3: cs.getPropertyValue("--h3c").trim(), mut: cs.getPropertyValue("--muted").trim(),
+                line: cs.getPropertyValue("--line").trim(), paper: cs.getPropertyValue("--paper").trim() };
+  const padL = 46, padR = 18, padT = 26, padB = 40;
+  const PW = W - padL - padR, PH = CH - padT - padB;
+  const X = t => padL + t * PW, Y = v => padT + (1 - v) * PH;
+  x.clearRect(0, 0, W, CH);
+
+  // сетка
+  x.strokeStyle = col.line; x.lineWidth = 1; x.setLineDash([]);
+  for (let g = 1; g <= 3; g++) {
+    x.globalAlpha = .55; x.beginPath();
+    x.moveTo(padL, Y(g/4)); x.lineTo(W - padR, Y(g/4)); x.stroke(); x.globalAlpha = 1;
   }
-  curve(cs.getPropertyValue("--h1c"), t => 18 + 66 * t);
-  curve(cs.getPropertyValue("--h2c"), t => 90 - 66 * Math.exp(-Math.pow((t-.55)/.22,2)));
-  curve(cs.getPropertyValue("--h3c"), t => 92 - 70 * t * t);
-  x.font = "10px ui-monospace, monospace"; x.fillStyle = cs.getPropertyValue("--muted");
-  x.fillText("СЕГОДНЯ", 6, 104); x.fillText("БУДУЩЕЕ", W - 58, 104);
+  // оси со стрелками
+  x.strokeStyle = col.mut; x.lineWidth = 1.4;
+  x.beginPath(); x.moveTo(padL, padT - 8); x.lineTo(padL, CH - padB); x.lineTo(W - padR + 6, CH - padB); x.stroke();
+  x.fillStyle = col.mut;
+  x.beginPath(); x.moveTo(padL, padT - 14); x.lineTo(padL - 4, padT - 6); x.lineTo(padL + 4, padT - 6); x.fill();
+  x.beginPath(); x.moveTo(W - padR + 12, CH - padB); x.lineTo(W - padR + 4, CH - padB - 4); x.lineTo(W - padR + 4, CH - padB + 4); x.fill();
+  x.font = "600 10px -apple-system, sans-serif";
+  x.save(); x.translate(padL - 30, Y(.5)); x.rotate(-Math.PI/2);
+  x.textAlign = "center"; x.fillText("ВКЛАД В ЦЕННОСТЬ", 0, 0); x.restore();
+  x.textAlign = "left"; x.fillText("СЕГОДНЯ", padL + 2, CH - padB + 16);
+  x.textAlign = "right"; x.fillText("ВРЕМЯ →", W - padR, CH - padB + 16);
+
+  // кривые
+  const F = {
+    h1: t => 0.78 - 0.58 * Math.pow(t, 1.35),
+    h2: t => 0.66 * Math.exp(-Math.pow((t - 0.55) / 0.21, 2)),
+    h3: t => 0.86 * Math.pow(t, 2.6),
+  };
+  function area(key) {
+    const f = F[key], cc = col[key];
+    const grad = x.createLinearGradient(0, padT, 0, CH - padB);
+    grad.addColorStop(0, cc + "3D"); grad.addColorStop(1, cc + "00");
+    x.beginPath(); x.moveTo(X(0), Y(Math.max(0, f(0))));
+    for (let t = 0; t <= 1.0001; t += .01) x.lineTo(X(t), Y(Math.max(0, f(t))));
+    x.lineTo(X(1), Y(0)); x.lineTo(X(0), Y(0)); x.closePath();
+    x.fillStyle = grad; x.fill();
+  }
+  function stroke(key) {
+    const f = F[key];
+    x.beginPath();
+    for (let t = 0; t <= 1.0001; t += .01) { const p = [X(t), Y(Math.max(0, f(t)))]; t === 0 ? x.moveTo(...p) : x.lineTo(...p); }
+    x.strokeStyle = col[key]; x.lineWidth = 2.6; x.lineJoin = "round"; x.stroke();
+    x.beginPath(); x.arc(X(1), Y(Math.max(0, f(1))), 4, 0, 7); x.fillStyle = col[key]; x.fill();
+  }
+  ["h1","h2","h3"].forEach(area); ["h1","h2","h3"].forEach(stroke);
+
+  // маркер «вы здесь»
+  x.setLineDash([4, 4]); x.strokeStyle = col.mut; x.lineWidth = 1;
+  x.beginPath(); x.moveTo(X(.12), padT); x.lineTo(X(.12), CH - padB); x.stroke(); x.setLineDash([]);
+  x.fillStyle = col.mut; x.textAlign = "left"; x.font = "10px -apple-system, sans-serif";
+  x.fillText("вы здесь", X(.12) + 5, padT + 10);
+
+  // подписи горизонтов с подложкой
+  const counts = [0, 0, 0];
+  DATA.forEach(i => { if (i.h) counts[i.h - 1]++; });
+  function label(txt, tx, ty, cc, align) {
+    x.font = "700 12px -apple-system, sans-serif"; x.textAlign = align;
+    x.lineWidth = 4; x.strokeStyle = col.paper; x.strokeText(txt, tx, ty);
+    x.fillStyle = cc; x.fillText(txt, tx, ty);
+  }
+  label("H1 · Ядро — " + counts[0], X(.04), Y(F.h1(.04)) - 10, col.h1, "left");
+  label("H2 · Мост — " + counts[1], X(.55), Y(F.h2(.55)) - 12, col.h2, "center");
+  label("H3 · Будущее — " + counts[2], X(.96), Y(F.h3(.96)) - 12, col.h3, "right");
 }
 
 /* ===== Матрица */
